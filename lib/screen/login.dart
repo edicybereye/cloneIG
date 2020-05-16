@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:training_ig/custom/billaBongText.dart';
 import 'package:training_ig/custom/customButton.dart';
+import 'package:training_ig/screen/registrasi.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -87,7 +88,12 @@ class _LoginState extends State<Login> {
                     style: TextStyle(color: Colors.grey),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Registrasi()));
+                    },
                     child: Text(
                       " Sign Up",
                       textAlign: TextAlign.center,

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:training_ig/custom/billaBongText.dart';
 import 'package:training_ig/custom/customButton.dart';
+import 'package:training_ig/model/loginModel.dart';
 import 'package:training_ig/network/network.dart';
 import 'package:training_ig/screen/menu.dart';
 import 'package:training_ig/screen/registrasi.dart';
@@ -47,10 +48,8 @@ class _LoginState extends State<Login> {
       "username": usernameController.text.trim(),
       "password": passwordController.text.trim(),
     });
-    final data = jsonDecode(response.body);
-    int value = data['value'];
-    String message = data['message'];
-    if (value == 1) {
+    LoginModel model = LoginModel.api(jsonDecode(response.body));
+    if (model.value == 1) {
       Navigator.pop(context);
       Navigator.push(context, MaterialPageRoute(builder: (context) => Menu()));
     } else {
@@ -59,7 +58,7 @@ class _LoginState extends State<Login> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              content: Text("$message"),
+              content: Text("${model.message}"),
               actions: <Widget>[
                 FlatButton(
                   onPressed: () => Navigator.pop(context),

@@ -5,6 +5,7 @@ import 'package:training_ig/custom/RegistrasiForm.dart';
 import 'package:training_ig/custom/billaBongText.dart';
 import 'package:training_ig/custom/customButton.dart';
 import 'package:http/http.dart' as http;
+import 'package:training_ig/model/loginModel.dart';
 import 'package:training_ig/network/network.dart';
 
 class Registrasi extends StatefulWidget {
@@ -50,10 +51,8 @@ class _RegistrasiState extends State<Registrasi> {
       "password": passwordController.text.trim(),
       "name": nameController.text.trim(),
     });
-    final data = jsonDecode(response.body);
-    int value = data['value'];
-    String message = data['message'];
-    if (value == 1) {
+    LoginModel model = LoginModel.api(jsonDecode(response.body));
+    if (model.value == 1) {
       Navigator.pop(context);
     } else {
       Navigator.pop(context);
@@ -61,7 +60,7 @@ class _RegistrasiState extends State<Registrasi> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              content: Text("$message"),
+              content: Text("${model.message}"),
               actions: <Widget>[
                 FlatButton(
                     onPressed: () => Navigator.pop(context), child: Text("Ok")),

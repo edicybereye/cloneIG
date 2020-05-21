@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:training_ig/network/network.dart';
 import 'package:training_ig/screen/menu/history.dart';
 import 'package:training_ig/screen/menu/home.dart';
 import 'package:training_ig/screen/menu/profile.dart';
@@ -12,6 +14,23 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   int selectIndex = 0;
+  String username, email, photo;
+  getPref() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      username = pref.getString("username");
+      email = pref.getString("email");
+      photo = pref.getString("photo");
+    });
+    print("Email Address : $email, Username : $username");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getPref();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -111,8 +130,8 @@ class _MenuState extends State<Menu> {
                         border: Border.all(width: 1, color: Colors.black),
                         shape: BoxShape.circle),
                     child: CircleAvatar(
-                      backgroundImage: AssetImage(
-                        "./assets/img/profile.jpg",
+                      backgroundImage: NetworkImage(
+                        "${NetworkURL.server}/profile/$photo",
                       ),
                     ),
                   ),

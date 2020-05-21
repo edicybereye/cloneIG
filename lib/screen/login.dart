@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:training_ig/custom/billaBongText.dart';
 import 'package:training_ig/custom/customButton.dart';
 import 'package:training_ig/model/loginModel.dart';
@@ -17,6 +18,21 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  LoginModel model;
+  String username;
+
+  getPref() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      username = pref.getString("username");
+
+      username != null
+          ? Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Menu()))
+          : null;
+    });
+  }
+
   var obSecure = true;
   final _key = GlobalKey<FormState>();
 
@@ -48,10 +64,19 @@ class _LoginState extends State<Login> {
       "username": usernameController.text.trim(),
       "password": passwordController.text.trim(),
     });
-    LoginModel model = LoginModel.api(jsonDecode(response.body));
+    model = LoginModel.api(jsonDecode(response.body));
     if (model.value == 1) {
       Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Menu()));
+      savePref(
+        model.id,
+        model.email,
+        model.username,
+        model.name,
+        model.createdDate,
+        model.photo,
+      );
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Menu()));
     } else {
       Navigator.pop(context);
       showDialog(
@@ -68,6 +93,31 @@ class _LoginState extends State<Login> {
             );
           });
     }
+  }
+
+  savePref(
+    String id,
+    String email,
+    String username,
+    String name,
+    String createdDate,
+    String photo,
+  ) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      pref.setString("id", id);
+      pref.setString("email", email);
+      pref.setString("username", username);
+      pref.setString("name", name);
+      pref.setString("createdDate", createdDate);
+      pref.setString("photo", photo);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getPref();
   }
 
   @override

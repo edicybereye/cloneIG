@@ -14,7 +14,7 @@ if (isset($result)) {
     $response['message'] = "Email already exists!";
     echo json_encode($response);
 } else {
-    $insert = "INSERT INTO users VALUE(NULL,'$email','$username','$name',NOW(),'$password','1','1')";
+    $insert = "INSERT INTO users VALUE(NULL,'$email','$username','$name',NOW(),'$password','1','1','default.png')";
     if (mysqli_query($con, $insert)) {
         $response['value'] = 1;
         $response['message'] = "Successs";
